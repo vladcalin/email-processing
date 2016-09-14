@@ -1,0 +1,3 @@
+celery[mongodb,redis]
+pymongo
+redis
