@@ -1,3 +1,4 @@
-celery[mongodb,redis]
-pymongo
+celery
 redis
+sqlalchemy
+psycopg2
