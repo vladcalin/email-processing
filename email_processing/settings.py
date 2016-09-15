@@ -1,18 +1,4 @@
+import os
 
-
-REDIS = {
-    "host": "localhost",
-    "port": 6389,
-    "db": 0
-}
-
-POSTGRESQL = {
-    "host": "localhost",
-    "port": 5432,
-    "database": "email_processing",
-    "username": "postgres",
-    "password": "postgres"
-}
-
-INBOXES = [
-]
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RUNTIME_CONFIG = os.path.join(BASE_DIR, "final_settings.json")

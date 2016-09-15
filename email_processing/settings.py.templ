@@ -1,0 +1,30 @@
+REDIS = {
+    "host": "localhost",
+    "port": 6389,
+    "db": 0
+}
+
+POSTGRESQL = {
+    "host": "localhost",
+    "port": 5432,
+    "database": "email_processing",
+    "username": "postgres",
+    "password": "postgres"
+}
+
+INBOXES = [
+    {
+        "inbox_name": "my_inbox",
+        "host": "pop.mail.yahoo.com",
+        "port": 995,
+        "use_ssl": true,
+        "protocol": "pop",
+        "username": "test@yahoo.com",
+        "password": "",
+        "frequency": "0 12 * * *",
+
+        "process_message": [...],
+        "on_result": [...],
+        "on_error": [...]
+    }
+]

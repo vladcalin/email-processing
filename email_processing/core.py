@@ -2,30 +2,34 @@ import json
 import sys
 import argparse
 import importlib
+import json
 
 from celery import Celery
+from celery.schedules import crontab
 
-import email_processing.settings as default_settings
+from email_processing.settings import RUNTIME_CONFIG
+
+with open(RUNTIME_CONFIG, "r") as json_conf:
+    config = json.load(json_conf)
 
 
-
-
-
+def get_periodic_tasks():
+    tasks = {}
 
 
 app = Celery(
     'email_processing.core',
-    broker=config.get_broker_url(),
-    backend=config.get_backend_url(),
+    broker=config["broker"],
+    backend=config["backend"],
     include=[
-        "email_processing.email_processing_tasks",
+        "email_processing.default_tasks",
         "email_processing.periodic_tasks"
     ]
 )
 
 app.conf.update(
-    BROKER_URL=config.get_broker_url(),
-    CELERY_RESULT_BACKEND=config.get_backend_url(),
+    BROKER_URL=config["broker"],
+    CELERY_RESULT_BACKEND=config["backend"],
 
     CELERY_TASK_SERIALIZER="json",
     CELERY_RESULT_SERIALIZER="json",
@@ -33,7 +37,8 @@ app.conf.update(
     CELERY_RESULT_DB_TABLENAMES={
         'task': 'processed_tasks',
         'group': 'myapp_groupmeta',
-    }
+    },
+    CELERYBEAT_SCHEDULE=get_periodic_tasks()
 )
 
 if __name__ == '__main__':
