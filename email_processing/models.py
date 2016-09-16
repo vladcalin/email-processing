@@ -20,7 +20,7 @@ class Inbox(Base):
     use_ssl = Column(Boolean, default=False)
 
     username = Column(Text())
-    password = Column(Binary())
+    password = Column(Text())
 
 
 class EmailMessage(Base):

@@ -39,7 +39,7 @@ class ConfigurationProvider:
             "inboxes": self.config.INBOXES
         }
         with open(RUNTIME_CONFIG, "w") as final_conf_fp:
-            json.dump(final_conf_fp, final_settings)
+            json.dump(final_settings, final_conf_fp)
 
 
 class Starter:
@@ -51,13 +51,18 @@ class Starter:
 
     def start_celery_workers(self):
         for _ in range(self._worker_count):
-            worker_proc = '"{python}" -m celery worker -A email_processing.core --concurrency={conc}'.format(
+            worker_proc_cmd = '"{python}" -m celery worker -A email_processing.core --concurrency={conc} -l DEBUG'.format(
                 python=sys.executable, conc=self._concurrency
             )
+            worker_proc = subprocess.Popen(worker_proc_cmd)
             self._workers.append(worker_proc)
 
     def start_celery_beat(self):
         pass
+
+    def hang(self):
+        for proc in self._workers:
+            proc.wait()
 
 
 if __name__ == '__main__':
@@ -79,3 +84,5 @@ if __name__ == '__main__':
     starter = Starter(RUNTIME_CONFIG, workers=args.workers, concurrency=args.concurrency)
     starter.start_celery_workers()
     starter.start_celery_beat()
+
+    starter.hang()

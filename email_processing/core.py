@@ -25,7 +25,7 @@ def get_periodic_tasks():
     for inbox in config["inboxes"]:
         inbox_instance = Inbox()
 
-        inbox_instance.id = inbox["id"]
+        inbox_instance.id = inbox["inbox_name"]
         inbox_instance.host = inbox["host"]
         inbox_instance.port = inbox["port"]
         inbox_instance.protocol = inbox["protocol"]
@@ -35,13 +35,13 @@ def get_periodic_tasks():
 
         session.add(inbox_instance)
 
-        frequency_cron = inbox["frequency"]
+        frequency_cron = inbox["frequency"].split(" ")
         on_result = inbox["on_result"]
         on_error = inbox["on_error"]
 
         tasks["periodic_process_{}".format(inbox_instance.id)] = {
             "task": "email_processing.default_tasks.process_inbox",
-            "schedule": crontab(frequency_cron),
+            "schedule": crontab(*frequency_cron),
             "kwargs": {
                 "id": inbox_instance.id,
                 "host": inbox_instance.host,
@@ -63,8 +63,7 @@ app = Celery(
     broker=config["broker"],
     backend=config["backend"],
     include=[
-        "email_processing.default_tasks",
-        "email_processing.periodic_tasks"
+        "email_processing.default_tasks"
     ]
 )
 
