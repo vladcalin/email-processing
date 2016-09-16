@@ -1,10 +1,12 @@
 import datetime
 
-from sqlalchemy import create_engine, Column, Integer, Binary, Text, String, ForeignKey, DateTime, Sequence
+from sqlalchemy import create_engine, Column, Integer, Binary, Text, String, ForeignKey, DateTime, Sequence, Boolean
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 engine = create_engine("postgresql+psycopg2://postgres:root@localhost:5432/email_processing")
 Base = declarative_base(bind=engine)
+Session = sessionmaker(bind=engine)
 
 
 class Inbox(Base):
@@ -15,6 +17,7 @@ class Inbox(Base):
     host = Column(String, nullable=False)
     port = Column(Integer, nullable=False)
     protocol = Column(String)
+    use_ssl = Column(Boolean, default=False)
 
     username = Column(Text())
     password = Column(Binary())

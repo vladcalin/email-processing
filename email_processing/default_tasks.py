@@ -2,6 +2,7 @@ from email_processing.core import app
 
 
 @app.task
-def retrieve_emails_pop(host, port, username, password, use_ssl=True):
+def process_inbox(host, port, protocol, use_ssl, username, password, on_result, on_error):
     pass
+
 
